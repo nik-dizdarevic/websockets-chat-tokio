@@ -1,0 +1,9 @@
+[package]
+name = "websockets-chat-tokio"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.37.0", features = ["full"] }
+bytes = "1.6.0"
+uuid = { version = "1.8.0", features = ["v4", "fast-rng", "macro-diagnostics"] }
