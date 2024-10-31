@@ -72,7 +72,7 @@ async fn handle_connection(mut stream: TcpStream, broker_tx: Sender<Event>) -> R
         stream.write_all(response.as_bytes()).await?;
         stream.flush().await?;
         buffer.clear();
-        let result = handle_websocket_frames(user, stream, buffer, &broker_tx).await;
+        let result = read_loop(user, stream, buffer, &broker_tx).await;
         if result.is_err() {
             let close = Frame::Close(StatusCode::ProtocolError);
             broker_tx.send(Event::Message(close.response().unwrap(), Recipient::User(user))).unwrap();
@@ -83,7 +83,7 @@ async fn handle_connection(mut stream: TcpStream, broker_tx: Sender<Event>) -> R
     }
 }
 
-async fn handle_websocket_frames(
+async fn read_loop(
     user: Uuid,
     stream: TcpStream,
     mut buffer: BytesMut,
